@@ -61,7 +61,7 @@ const Chat: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [chat, setChat] = useState(defaultValue.chat);
 
     const addHistory = (h: History) => {
-        history.push(h);
+        history.unshift(h);
         setHistory([...history]);
     };
 
