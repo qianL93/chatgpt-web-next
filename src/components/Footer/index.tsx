@@ -10,13 +10,16 @@ import useChatProgress from "@/hooks/useChatProgress";
 import downloadAsImage from "@/utils/downloadAsImage";
 import { AppStore } from "@/store/App";
 
+const sleep =  (ms = 0) => new Promise(a => setTimeout(() => a(1), ms));
+
 interface Props {
     responding: boolean;
     onMessageUpdate: () => void;
     setResponding: (value: boolean) => void;
+    disabled?: boolean | string;
 }
 
-const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding }) => {
+const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding, disabled = false }) => {
     const isMobile = useIsMobile();
     const router = useRouter();
     const { chat, history, addChat, clearChat, updateHistory } = useContext(ChatStore);
@@ -62,8 +65,8 @@ const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding })
             requestOptions: { prompt: message, options },
         });
         onMessageUpdate();
-
-        request(conversationList.length - 1, onMessageUpdate);
+        await sleep(100);
+        request(conversationList.length ? conversationList.length - 1 : 0, onMessageUpdate);
     };
 
     const onClear = () => {
@@ -93,12 +96,12 @@ const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding })
         if (!isMobile) {
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                submit((e.target as HTMLTextAreaElement).value);
+                submit(value);
             }
         } else {
             if (e.key === "Enter" && e.ctrlKey) {
                 e.preventDefault();
-                submit((e.target as HTMLTextAreaElement).value);
+                submit(value);
             }
         }
     };
@@ -146,8 +149,9 @@ const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding })
                     )}
                     <Input.TextArea
                         value={value}
+                        disabled={!!disabled}
                         placeholder={
-                            isMobile ? "来说点什么吧..." : "来说点什么吧...（Shift + Enter = 换行）"
+                            !disabled ? (isMobile ? "来说点什么吧..." : "来说点什么吧...（Shift + Enter = 换行）") : (typeof disabled === 'string' ? disabled : '')
                         }
                         autoSize={{ minRows: 1, maxRows: 2 }}
                         onChange={(e) => setValue(e.target.value)}

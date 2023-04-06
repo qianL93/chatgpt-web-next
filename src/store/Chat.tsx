@@ -29,7 +29,7 @@ export interface Chat {
     addHistory: (history: History) => void;
     deleteHistory: (uuid: number) => void;
     updateHistory: (history: History) => void;
-    addChat: (uuid: number, chat: ChatData) => void;
+    addChat: (uuid: number, chat: ChatData) => number;
     clearChat: (uuid: number) => void;
     updateChat: (uuid: number, index: number, chat: ChatData) => void;
     deleteChat: (uuid: number, index: number) => void;
@@ -79,19 +79,20 @@ const Chat: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         if (!uuid || uuid === 0) {
             return;
         }
-
+        let index = 0;
         const isNotExists = chat.findIndex((item) => item.uuid === uuid) === -1;
         if (isNotExists) {
             chat.push({ uuid, data: [c] });
         } else {
-            chat.forEach((item) => {
+            chat.forEach((item, i) => {
                 if (item.uuid === uuid) {
                     item.data.push(c);
+                    index = i;
                 }
             });
         }
-
         setChat([...chat]);
+        return index;
     };
 
     const updateChat = (uuid: number, index: number, c: ChatData) => {

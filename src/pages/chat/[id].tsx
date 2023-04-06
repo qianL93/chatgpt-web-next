@@ -99,6 +99,7 @@ const ChatPage = () => {
                 onMessageUpdate={() => setTimeout(() => scrollToBottom(), 0)}
                 responding={responding}
                 setResponding={setResponding}
+                disabled={dataSources?.length > 30 && '当前对话长度超出了限制，请在左边新建一个对话'}
             />
         </div>
     );

@@ -1,7 +1,7 @@
 import http from "@/service/http";
 import { ChatStore } from "@/store/Chat";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 const useChatProgress = (responding: boolean, setResponding: (e: boolean) => void) => {
     const router = useRouter();
@@ -12,7 +12,8 @@ const useChatProgress = (responding: boolean, setResponding: (e: boolean) => voi
         return chat.find((item) => item.uuid === uuid)?.data || [];
     }, [chat, uuid]);
 
-    const request = async (index: number, onMessageUpdate?: () => void) => {
+    const requestImp = async (ii: number, onMessageUpdate?: () => void) => {
+        const index = ii || conversationList.length - 1;
         const currentChat = conversationList[index] || {};
         const message = currentChat.requestOptions?.prompt ?? "";
         const options = currentChat.requestOptions?.options ?? {};
@@ -99,6 +100,11 @@ const useChatProgress = (responding: boolean, setResponding: (e: boolean) => voi
             setResponding(false);
         }
     };
+
+    const requestRef = useRef(requestImp);
+    requestRef.current = requestImp;
+
+    const request = (index: number, onMessageUpdate?: () => void) => requestRef.current(index, onMessageUpdate);
 
     useEffect(() => {
         if (!responding && controller.current) {
