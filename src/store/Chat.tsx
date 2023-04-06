@@ -77,7 +77,7 @@ const Chat: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     const addChat = (uuid: number, c: ChatData) => {
         if (!uuid || uuid === 0) {
-            return;
+            return -1;
         }
         let index = 0;
         const isNotExists = chat.findIndex((item) => item.uuid === uuid) === -1;
