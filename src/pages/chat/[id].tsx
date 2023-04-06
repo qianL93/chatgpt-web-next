@@ -30,6 +30,10 @@ const ChatPage = () => {
         return history.find((item) => item.uuid === uuid);
     }, [history, uuid]);
 
+    const limited = useMemo(() => {
+        return dataSources?.length > 30 || (Date.now() - new Date(dataSources[dataSources.length - 1]?.dateTime || Date.now()).getTime()) > 1000 * 60 * 30;
+    }, [dataSources]);
+
     return (
         <div className="flex flex-col w-full h-full">
             {isMobile && <Header title={currentChatHistory?.title} scrollToTop={scrollToTop} />}
@@ -99,7 +103,7 @@ const ChatPage = () => {
                 onMessageUpdate={() => setTimeout(() => scrollToBottom(), 0)}
                 responding={responding}
                 setResponding={setResponding}
-                disabled={dataSources?.length > 30 && '当前对话长度超出了限制，请在左边新建一个对话'}
+                disabled={limited && '当前对话长度或时间超出了限制，点击开始新的话题吧'}
             />
         </div>
     );

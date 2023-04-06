@@ -82,7 +82,7 @@ const Sidebar: React.FC<Props> = () => {
                             </Scrollbar>
                         </div>
                     </main>
-                    <Footer />
+                    {/* <Footer /> */}
                 </div>
                 <Button
                     className={classNames(
