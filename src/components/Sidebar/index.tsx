@@ -62,7 +62,7 @@ const Sidebar: React.FC<Props> = () => {
                     <main className="flex flex-col flex-1 min-h-0">
                         <div className="p-4">
                             <Button type="dashed" block onClick={onAddHistory}>
-                                新建对话
+                                新建话题
                             </Button>
                         </div>
                         <div className="flex-1 min-h-0 pb-4 overflow-hidden">

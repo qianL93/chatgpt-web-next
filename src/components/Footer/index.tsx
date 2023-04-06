@@ -22,7 +22,7 @@ interface Props {
 const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding, disabled = false }) => {
     const isMobile = useIsMobile();
     const router = useRouter();
-    const { chat, history, addChat, clearChat, updateHistory, addHistory } = useContext(ChatStore);
+    const { chat, history, addChat, clearChat, updateHistory } = useContext(ChatStore);
     const { hasContext, setHasContext } = useContext(AppStore);
     const [value, setValue] = useState("");
     const { request } = useChatProgress(responding, setResponding);
@@ -33,12 +33,6 @@ const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding, d
     const currentHistory = useMemo(() => {
         return history.find((item) => item.uuid === uuid);
     }, [history, uuid]);
-
-    const onAddHistory = () => {
-        const uuid = Date.now();
-        addHistory({ title: DEFAULT_TITLE, uuid });
-        router.push(`/chat/${uuid}`);
-    };
 
     const submit = async (message: string) => {
         if (!message || message.trim() === "") return;
@@ -153,18 +147,17 @@ const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding, d
                             </Button>
                         </>
                     )}
-                    {disabled ? <Button className="flex-grow" type="primary" onClick={() => onAddHistory()}>
-                        {typeof disabled === 'string' ? disabled : '新主题'}
-                    </Button> :
-                        <Input.TextArea
-                            value={value}
-                            placeholder={
-                                (isMobile ? "来说点什么吧..." : "来说点什么吧...（Shift + Enter = 换行）")
-                            }
-                            autoSize={{ minRows: 1, maxRows: 2 }}
-                            onChange={(e) => setValue(e.target.value)}
-                            onPressEnter={onPressEnter}
-                        />}
+                    <Input.TextArea
+                        value={value}
+                        disabled={!!disabled}
+                        placeholder={
+                            !!disabled ? (typeof disabled === 'string' ? disabled : '新主题') : (
+                                (isMobile ? "来说点什么吧..." : "来说点什么吧...（Shift + Enter = 换行）"))
+                        }
+                        autoSize={{ minRows: 1, maxRows: 2 }}
+                        onChange={(e) => setValue(e.target.value)}
+                        onPressEnter={onPressEnter}
+                    />
                     {!disabled && <Button type="primary" onClick={() => submit(value)}>
                         <SendOutlined />
                     </Button>}
