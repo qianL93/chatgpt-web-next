@@ -31,7 +31,7 @@ const ChatPage = () => {
     }, [history, uuid]);
 
     const limited = useMemo(() => {
-        return dataSources?.length > 25 || (Date.now() - new Date(dataSources[dataSources.length - 1]?.dateTime || Date.now()).getTime()) > 1000 * 60 * 30;
+        return dataSources?.length > 40 || (Date.now() - new Date(dataSources[dataSources.length - 1]?.dateTime || Date.now()).getTime()) > 1000 * 60 * 180;
     }, [dataSources, dataSources?.length]);
 
     const onAddHistory = () => {
