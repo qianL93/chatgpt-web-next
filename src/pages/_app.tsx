@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <>
             <Script async src="https://www.googletagmanager.com/gtag/js?id=G-BSVL5M87KM"/>
-            <Script>
+            <Script id="gtag">
                 {`window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
