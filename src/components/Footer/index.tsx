@@ -110,7 +110,7 @@ const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding, d
           
         if (translateMode) {
             const chinese = isChinese(valueToSubmit);
-            const prompt = chinese ? '上面这段中文用英语怎么表达?' : '上面这句话是什么意思（必要的话指出语法或拼写错误）？另外，另外，这句话是否符合英语表达习惯？'
+            const prompt = chinese ? '上面这段中文用英语怎么表达?' : '上面这句话是什么意思（必要的话指出语法或拼写错误）？另外，这句话是否符合英语表达习惯？'
             valueToSubmit = `"${valueToSubmit}"\n${prompt}`
         }
         if (!isMobile) {
