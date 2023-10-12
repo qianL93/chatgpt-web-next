@@ -2,7 +2,7 @@ import useIsMobile from "@/hooks/useIsMobile";
 import Button from "@/components/Button";
 import classNames from "classnames";
 import { useContext, useMemo, useState } from "react";
-import { DeleteOutlined, DownloadOutlined, ProfileOutlined, SendOutlined } from "@ant-design/icons";
+import { DeleteOutlined, DownloadOutlined, ProfileOutlined, SendOutlined, TranslationOutlined } from "@ant-design/icons";
 import { Input, message, Modal } from "antd";
 import { useRouter } from "next/router";
 import { ChatStore, DEFAULT_TITLE } from "@/store/Chat";
@@ -11,6 +11,11 @@ import downloadAsImage from "@/utils/downloadAsImage";
 import { AppStore } from "@/store/App";
 
 const sleep = (ms = 0) => new Promise(a => setTimeout(() => a(1), ms));
+
+function isChinese(str: string) {
+    // 使用正则表达式检查字符串是否只包含中文字符
+    return /[\u4E00-\u9FFF]+/.test(str);
+}
 
 interface Props {
     responding: boolean;
@@ -92,19 +97,35 @@ const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding, d
         }
     };
 
+    const [translateMode, setTranslateMode] = useState(false);
+
+
+    const onTranslateMode = () => {
+        setTranslateMode(p => !p);
+        message.success(!translateMode ? '开启英语翻译模式' : '关闭英语翻译模式');
+    }
+
     const onPressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        let valueToSubmit = value;
+          
+        if (translateMode) {
+            const chinese = isChinese(valueToSubmit);
+            const prompt = chinese ? '上面这段中文用语怎么表达?' : '上面这句话是什么意思？另外，换做一个美国人，他会怎么表达同样的意思？'
+            valueToSubmit = `"${valueToSubmit}"\n${prompt}`
+        }
         if (!isMobile) {
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                submit(value);
+                submit(valueToSubmit);
             }
         } else {
             if (e.key === "Enter" && e.ctrlKey) {
                 e.preventDefault();
-                submit(value);
+                submit(valueToSubmit);
             }
         }
     };
+
 
     return (
         <footer
@@ -144,6 +165,17 @@ const Footer: React.FC<Props> = ({ onMessageUpdate, responding, setResponding, d
                                 onClick={onChangeContext}
                             >
                                 <ProfileOutlined />
+                            </Button>
+                            <Button
+                                type="text"
+                                shape="circle"
+                                className={classNames(
+                                    "flex items-center justify-center text-lg hover:text-[#3050fb]",
+                                    translateMode && "text-[#3050fb] focus:text-[#3050fb]"
+                                )}
+                                onClick={onTranslateMode}
+                            >
+                                <TranslationOutlined />
                             </Button>
                         </>
                     )}
