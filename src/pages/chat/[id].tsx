@@ -116,7 +116,7 @@ const ChatPage = () => {
                 onMessageUpdate={() => setTimeout(() => scrollToBottom(), 0)}
                 responding={responding}
                 setResponding={setResponding}
-                disabled={limited && '当前对话长度或时间超出了限制，点击开始新的话题吧'}
+                disabled={limited && '当前对话长度或时间超出了限制，点击开始新的话题'}
             />
         </div>
     );
